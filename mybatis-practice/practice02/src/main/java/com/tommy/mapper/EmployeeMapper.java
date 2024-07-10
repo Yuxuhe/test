@@ -10,7 +10,7 @@ import java.util.Map;
  * ClassName: EmployeeMapper
  * PackageName: com.tommy.mapper
  * Create: 2024/6/12-17:44
- * Description: 12
+ * Description: 1
  * @author Z
  */
 public interface EmployeeMapper {
