@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tommy.mapper.EmployeeMapper">
+
+    <select id="queryByBatch" resultType="employee">
+        select * from t_emp
+        where emp_id in
+        <foreach collection="ids" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteBatch">
+        delete from t_emp
+        where id in
+        <foreach collection="ids" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertBatch" useGeneratedKeys="true" keyColumn="emp_id" keyProperty="empId">
+        insert into t_emp(emp_name,emp_salary)
+        values
+        <foreach collection="employees" separator="," item="employee">
+            (#{employee.empName},#{employee.empSalary})
+        </foreach>
+    </insert>
+    
+    <update id="updateBatch">
+        <foreach collection="employeeList" item="employee">
+            update t_emp
+            set emp_name = #{employee.empName}, emp_salary = #{employee.empSalary}
+            where emp_id = #{employee.empId}
+        </foreach>
+    </update>
+
+    <select id="query" resultType="employee">
+        select * from t_emp
+        <where>
+            <if test="name != null">
+                emp_name = #{name}
+            </if>
+
+            <if test="salary !=null and salary &gt; 100">
+                and emp_salary = #{salary}
+            </if>
+        </where>
+    </select>
+
+    <update id="update">
+        update t_emp
+        <set>
+            <if test="empName != null">
+                emp_name = #{empName},
+            </if>
+
+            <if test="empSalary &gt; 100">
+                emp_salary = #{empSalary}
+            </if>
+        </set>
+        where emp_id = #{empId}
+    </update>
+
+    <select id="selectEmployeeByConditionByChoose" resultType="employee">
+        select * from t_emp
+        where
+        <choose>
+            <when test="empName != null"> emp_name = #{empName} </when>
+            <when test="empSalary &gt; 3000"> emp_salary = #{empSalary} </when>
+            <otherwise>1=1</otherwise>
+        </choose>
+    </select>
+
+</mapper>

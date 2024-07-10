@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tommy.mapper.EmployeeMapper">
+
+    <select id="queryById" resultType="employee">
+        select emp_id empId, emp_name empName, emp_salary empSalary
+        from t_emp
+        where emp_id = #{id}
+    </select>
+
+    <select id="queryNameById" resultType="string">
+        select emp_name empName
+        from t_emp
+        where emp_id = #{id}
+    </select>
+
+    <select id="querySalaryById" resultType="double">
+        select emp_salary
+        from t_emp
+        where emp_id = #{id}
+    </select>
+
+    <!-- Map<String,Object> selectEmpNameAndMaxSalary(); -->
+    <!-- 返回工资最高的员工的姓名和他的工资 -->
+    <select id="selectEmpNameAndMaxSalary" resultType="map">
+        SELECT
+        emp_name 员工姓名,
+        emp_salary 员工工资,
+        (SELECT AVG(emp_salary) FROM t_emp) 部门平均工资
+        FROM t_emp WHERE emp_salary=(
+        SELECT MAX(emp_salary) FROM t_emp
+        )
+    </select>
+
+    <insert id="insertEmp" useGeneratedKeys="true" keyColumn="emp_id" keyProperty="empId">
+        insert into t_emp (emp_name,emp_salary)
+        values(#{empName},#{empSalary})
+    </insert>
+
+    <insert id="insertTeacher">
+        <!-- 先提前生成主键值 -->
+        <selectKey order="BEFORE" resultType="string" keyProperty="tId">
+            select replace(UUID(),'-','');
+        </selectKey>
+
+        insert into teacher(t_id,t_name)
+        values(#{tId},#{tName})
+    </insert>
+
+</mapper>

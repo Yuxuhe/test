@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定名,这样实现对应 -->
+<mapper namespace="com.tommy.mapper.EmployeeMapper">
+
+    <select id="selectEmployee" resultType="com.tommy.pojo.Employee">
+        select emp_id empId, emp_name empName, emp_salary empSalary
+        from t_emp
+        where emp_id = #{id}
+    </select>
+
+    <delete id="deleteEmployee">
+        delete from t_emp
+        where emp_id = #{id}
+    </delete>
+
+</mapper>
